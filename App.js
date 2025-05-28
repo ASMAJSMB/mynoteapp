@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DashboardPage from './components/DashboardPage';
-import FormulaireNote from './components/FormulaireNote';
-import ListDetails from './components/ListDetails';
-import styles from './styles'; // sans .css
+import DashboardPage from './Components/Dashboard';
+import FormulaireNote from './Components/FormuList';
+import ListDetails from './Components/ListeDetails';
+import styles from './style'; // sans .css
 
 
 const Stack = createNativeStackNavigator();
