@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DashboardPage from './components/DashboardPage';
 import FormulaireNote from './components/FormulaireNote';
 import ListDetails from './components/ListDetails';
+import styles from './styles'; // sans .css
+
 
 const Stack = createNativeStackNavigator();
 
