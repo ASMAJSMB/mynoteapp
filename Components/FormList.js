@@ -1,26 +1,116 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
-import styles from '../styles';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
+import styles from './styles';
 import { saveNote } from '../storage/storage';
+import Header from './Header';
 
-export default function FormulaireNote({ navigation }) {
+export default function FormulaireNote({ navigation, route }) {
+  const noteToEdit = route.params?.note;
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [importance, setImportance] = useState('low');
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // Remplir les champs si on édite une note
+  useEffect(() => {
+    if (noteToEdit) {
+      setTitle(noteToEdit.title);
+      setContent(noteToEdit.content);
+      setImportance(noteToEdit.importance);
+      if (noteToEdit.date) {
+        setDate(new Date(noteToEdit.date));
+      }
+    }
+  }, [noteToEdit]);
+
+  const onChangeDate = (event, selectedDate) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setDate(selectedDate);
+    }
+  };
 
   const handleSave = async () => {
-    await saveNote({ title, content, importance });
+    // Si édition, on passe l'id pour sauvegarder/modifier la note existante
+    const noteData = {
+      id: noteToEdit?.id,
+      title,
+      content,
+      importance,
+      date: date.toISOString(),
+    };
+    await saveNote(noteData);
     navigation.navigate('Dashboard');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add Note</Text>
-      <TextInput placeholder="Title" style={styles.input} value={title} onChangeText={setTitle} />
-      <TextInput placeholder="Content" style={styles.input} value={content} onChangeText={setContent} multiline />
-      <TextInput placeholder="Importance (low, medium, high)" style={styles.input} value={importance} onChangeText={setImportance} />
-      <Button title="Save" onPress={handleSave} />
+    <View style={{ flex: 1 }}>
+      <Header />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={90}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.title}>{noteToEdit ? 'Edit Note' : 'Add Note'}</Text>
+
+            <TextInput
+              placeholder="Title"
+              style={styles.input}
+              value={title}
+              onChangeText={setTitle}
+            />
+
+            <TextInput
+              placeholder="Content"
+              style={styles.input}
+              value={content}
+              onChangeText={setContent}
+              multiline
+            />
+
+            <Text style={styles.label}>Importance</Text>
+            <Picker
+              selectedValue={importance}
+              style={styles.input}
+              onValueChange={(itemValue) => setImportance(itemValue)}
+            >
+              <Picker.Item label="Low" value="low" />
+              <Picker.Item label="Medium" value="medium" />
+              <Picker.Item label="High" value="high" />
+            </Picker>
+
+            <Text style={styles.label}>Date</Text>
+            <Button title={date.toLocaleDateString()} onPress={() => setShowDatePicker(true)} />
+
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={onChangeDate}
+              />
+            )}
+
+            <Button title={noteToEdit ? 'Update' : 'Save'} onPress={handleSave} />
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </View>
   );
 }
-

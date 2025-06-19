@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, FlatList, TouchableOpacity } from 'react-native';
-import styles from '../styles';
+import styles from './styles';
 import { getNotes } from '../storage/storage';
+import Header from './Header'; // ✅ Importation du Header
 
 export default function DashboardPage({ navigation }) {
   const [notes, setNotes] = useState([]);
@@ -15,18 +16,24 @@ export default function DashboardPage({ navigation }) {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>My Notes</Text>
-      <Button title="Add a Note" onPress={() => navigation.navigate('AddNote')} />
-      <FlatList
-        data={notes}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.note} onPress={() => navigation.navigate('NoteDetails', { note: item })}>
-            <Text style={styles.noteTitle}>{item.title}</Text>
-          </TouchableOpacity>
-        )}
-      />
+    <View style={{ flex: 1 }}>
+      <Header /> {/* ✅ Affichage du Header */}
+      <View style={styles.container}>
+        <Text style={styles.title}>My Notes</Text>
+        <Button title="Add a Note" onPress={() => navigation.navigate('AddNote')} />
+        <FlatList
+          data={notes}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.note}
+              onPress={() => navigation.navigate('NoteDetails', { note: item })}
+            >
+              <Text style={styles.noteTitle}>{item.title}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     </View>
   );
 }
