@@ -21,12 +21,12 @@ export default function App() {
     Montserrat_700Bold,
   });
 
-  // ⏳ Tant que les polices ne sont pas chargées, on affiche un écran d'attente
+  //  Tant que les polices ne sont pas chargées, on affiche un écran d'attente
   if (!fontsLoaded) {
     return <AppLoading />;
   }
 
-  // ✅ L'application s'affiche normalement quand les polices sont prêtes
+  //  L'application s'affiche normalement quand les polices sont prêtes
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Dashboard">

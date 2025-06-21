@@ -17,15 +17,17 @@ import { saveNote } from '../storage/storage';
 import Header from './Header';
 
 export default function FormulaireNote({ navigation, route }) {
+  // Récupère la note passée en paramètre si on édite
   const noteToEdit = route.params?.note;
 
+  // États pour chaque champ du formulaire
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [importance, setImportance] = useState('low');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Remplir les champs si on édite une note
+  // Remplit le formulaire si une note est passée en paramètre
   useEffect(() => {
     if (noteToEdit) {
       setTitle(noteToEdit.title);
@@ -37,6 +39,7 @@ export default function FormulaireNote({ navigation, route }) {
     }
   }, [noteToEdit]);
 
+  // Gestion du changement de date
   const onChangeDate = (event, selectedDate) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
@@ -44,17 +47,17 @@ export default function FormulaireNote({ navigation, route }) {
     }
   };
 
+  // Enregistre ou met à jour une note
   const handleSave = async () => {
-    // Si édition, on passe l'id pour sauvegarder/modifier la note existante
     const noteData = {
-      id: noteToEdit?.id,
+      id: noteToEdit?.id, // Garde l'id si c’est une modification
       title,
       content,
       importance,
       date: date.toISOString(),
     };
     await saveNote(noteData);
-    navigation.navigate('Dashboard');
+    navigation.navigate('Dashboard'); // Retour à la liste des notes
   };
 
   return (
