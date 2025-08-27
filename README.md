@@ -11,4 +11,5 @@ Si Expo CLI n’est pas encore installé :
 npm install -g expo-cli
 📱 3. Lancer l'application
 
-expo start
+npx expo start
+scannez le qr code pour accéder a l'application mobile 
