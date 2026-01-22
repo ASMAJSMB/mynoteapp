@@ -47,7 +47,7 @@ export default function ListDetails({ route, navigation }) {
           <Text style={[localStyles.importance, { backgroundColor: color }]}>{note.importance.toUpperCase()}</Text>
         </View>
         <Text style={localStyles.content}>{note.content}</Text>
-        {note.date && <Text style={localStyles.date}>Date : {new Date(note.date).toLocaleDateString()}</Text>}
+        {note.date && <Text style={localStyles.date}>Date et heure : {new Date(note.date).toLocaleString()}</Text>}
         <View style={localStyles.buttonRow}>
           <CustomButton title="Modifier" icon="pencil" onPress={handleEdit} style={localStyles.button} />
           <CustomButton title="Supprimer" icon="trash" onPress={() => setModalVisible(true)} style={[localStyles.button, localStyles.deleteButton]} />
