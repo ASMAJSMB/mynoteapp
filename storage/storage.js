@@ -1,26 +1,43 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const getNotes = async () => {
-  const notes = await AsyncStorage.getItem('notes');
-  return notes ? JSON.parse(notes) : [];
-};
+const NOTES_KEY = '@mynoteapp_notes';
 
-export const saveNote = async (note) => {
-  const existing = await getNotes();
-
-  if (note.id) {
-    // Modification d'une note existante
-    const updatedNotes = existing.map(n => (n.id === note.id ? note : n));
-    await AsyncStorage.setItem('notes', JSON.stringify(updatedNotes));
-  } else {
-    // Création d'une nouvelle note
-    const newNote = { ...note, id: Date.now() };
-    await AsyncStorage.setItem('notes', JSON.stringify([newNote, ...existing]));
+export async function getNotes() {
+  try {
+    const json = await AsyncStorage.getItem(NOTES_KEY);
+    const notes = json != null ? JSON.parse(json) : [];
+    // Ajout du champ 'completed' par défaut pour rétrocompatibilité
+    return notes.map(note => ({
+      ...note,
+      completed: note.completed || false,  // false par défaut si absent
+    }));
+  } catch (e) {
+    console.error('Erreur getNotes', e);
+    return [];
   }
-};
+}
 
-export const deleteNote = async (id) => {
-  const existing = await getNotes();
-  const filtered = existing.filter(note => note.id !== id);
-  await AsyncStorage.setItem('notes', JSON.stringify(filtered));
-};
+export async function saveNote(note) {
+  const notes = await getNotes();
+  // Ajout du champ 'completed' lors de la sauvegarde
+  const noteToSave = {
+    ...note,
+    completed: note.completed || false,  // false par défaut si absent
+  };
+  if (noteToSave.id) {
+    // Modifier note existante
+    const index = notes.findIndex(n => n.id === noteToSave.id);
+    if (index > -1) notes[index] = noteToSave;
+    else notes.push(noteToSave);
+  } else {
+    noteToSave.id = Date.now();
+    notes.push(noteToSave);
+  }
+  await AsyncStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
+export async function deleteNote(id) {
+  let notes = await getNotes();
+  notes = notes.filter(n => n.id !== id);
+  await AsyncStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
