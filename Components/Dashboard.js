@@ -90,33 +90,43 @@ export default function DashboardPage({ navigation }) {
           data={notes}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.note}
-              onPress={() => navigation.navigate('NoteDetails', { note: item })}
-            >
-              {/* Checkbox à gauche */}
-              <TouchableOpacity
-                style={localStyles.checkbox}
-                onPress={() => toggleCompleted(item.id)}
-              >
-                <Ionicons
-                  name={item.completed ? 'checkbox' : 'checkbox-outline'}
-                  size={24}
-                  color={item.completed ? '#4F46E5' : '#666'}
-                />
-              </TouchableOpacity>
-              {/* Titre avec badge d'importance à côté */}
-              <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                <Text style={[styles.noteTitle, item.completed && localStyles.completedText]}>{item.title}</Text>
-                <View style={{ marginLeft: 10 }}>
-                  <Text style={[localStyles.importanceBadge, { backgroundColor: importanceColors[item.importance] || importanceColors.low }]}>
-                    {item.importance ? item.importance.charAt(0).toUpperCase() + item.importance.slice(1) : 'Low'}
-                  </Text>
-                </View>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color="#666" />
-            </TouchableOpacity>
-          )}
+  <TouchableOpacity
+    style={styles.note}
+    onPress={() => navigation.navigate('NoteDetails', { note: item })}
+  >
+    {/* Checkbox à gauche */}
+    <TouchableOpacity
+      style={localStyles.checkbox}
+      onPress={() => toggleCompleted(item.id)}
+    >
+      <Ionicons
+        name={item.completed ? 'checkbox' : 'checkbox-outline'}
+        size={24}
+        color={item.completed ? '#4F46E5' : '#666'}
+      />
+    </TouchableOpacity>
+    {/* Titre avec badge d'importance à côté */}
+    <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+      {/* Titre tronqué pour prendre l'espace restant */}
+      <View style={{ flex: 1 }}>
+        <Text 
+          style={[styles.noteTitle, item.completed && localStyles.completedText]} 
+          numberOfLines={1} 
+          ellipsizeMode='tail'
+        >
+          {item.title}
+        </Text>
+      </View>
+      {/* Badge d'importance, toujours visible à droite */}
+      <View style={{ marginLeft: 10 }}>
+        <Text style={[localStyles.importanceBadge, { backgroundColor: importanceColors[item.importance] || importanceColors.low }]}>
+          {item.importance ? item.importance.charAt(0).toUpperCase() + item.importance.slice(1) : 'Low'}
+        </Text>
+      </View>
+    </View>
+    <Ionicons name="chevron-forward" size={20} color="#666" />
+  </TouchableOpacity>
+)}
           ListEmptyComponent={<Text style={styles.emptyText}>Aucune note pour le moment.</Text>}
         />
       </View>

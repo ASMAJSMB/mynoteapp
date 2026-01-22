@@ -49,7 +49,7 @@ export default function ListDetails({ route, navigation }) {
         <Text style={localStyles.content}>{note.content}</Text>
         {note.date && <Text style={localStyles.date}>Date : {new Date(note.date).toLocaleDateString()}</Text>}
         <View style={localStyles.buttonRow}>
-          <CustomButton title="Modifier" icon="edit" onPress={handleEdit} style={localStyles.button} />
+          <CustomButton title="Modifier" icon="pencil" onPress={handleEdit} style={localStyles.button} />
           <CustomButton title="Supprimer" icon="trash" onPress={() => setModalVisible(true)} style={[localStyles.button, localStyles.deleteButton]} />
         </View>
         <CustomButton title="Retour au Dashboard" onPress={() => navigation.navigate('Dashboard')} style={localStyles.backButton} />
