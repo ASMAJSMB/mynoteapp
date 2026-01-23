@@ -49,4 +49,55 @@ export default StyleSheet.create({
   cancelButton: { backgroundColor: '#95a5a6' },
   confirmButton: { backgroundColor: '#e74c3c' },
   modalButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
+  // Styles pour les modales (réutilisables pour DeleteModal et BackAlertModal)
+modalOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+modalContent: {
+  backgroundColor: 'white',
+  borderRadius: 10,
+  padding: 20,
+  width: '80%',
+  alignItems: 'center',
+},
+modalIcon: {
+  marginBottom: 10,
+},
+modalTitle: {
+  fontSize: 20,
+  fontWeight: 'bold',
+  marginBottom: 10,
+  color: '#333',
+},
+modalMessage: {
+  fontSize: 16,
+  textAlign: 'center',
+  marginBottom: 20,
+  color: '#666',
+},
+modalButtons: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+},
+modalButton: {
+  flex: 1,
+  padding: 10,
+  borderRadius: 5,
+  alignItems: 'center',
+  marginHorizontal: 5,
+},
+cancelButton: {
+  backgroundColor: '#bdc3c7',
+},
+confirmButton: {
+  backgroundColor: '#e74c3c',  // Rouge pour Quitter, ou orange si tu préfères
+},
+modalButtonText: {
+  color: 'white',
+  fontSize: 16,
+},
 });

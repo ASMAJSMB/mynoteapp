@@ -9,6 +9,7 @@ import styles from './styles';
 import { saveNote } from '../storage/storage';
 import Header from './Header';
 import CustomButton from './CustomButton';
+import BackAlertModal from './BackAlertModal';  // Import du nouveau modal
 
 export default function FormulaireNote({ navigation, route }) {
   const noteToEdit = route?.params?.note;
@@ -19,6 +20,7 @@ export default function FormulaireNote({ navigation, route }) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showBackAlert, setShowBackAlert] = useState(false);  // État pour le modal
 
   useEffect(() => {
     if (noteToEdit) {
@@ -41,7 +43,7 @@ export default function FormulaireNote({ navigation, route }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = useCallback(async () => {
+  const handleSave = useCallback(async () => {  // Définition explicite de handleSave
     if (!validateForm()) return;
     setLoading(true);
     try {
@@ -63,17 +65,23 @@ export default function FormulaireNote({ navigation, route }) {
 
   const hasChanges = title.trim() || content.trim() || importance !== 'low';
   const resetForm = () => { setTitle(''); setContent(''); setImportance('low'); setDate(new Date()); setErrors({}); };
+
   const handleBackToDashboard = () => {
     if (hasChanges) {
-      Alert.alert(
-        'Quitter la note',
-        'Les modifications ne seront pas enregistrées.',
-        [
-          { text: 'Annuler', style: 'cancel' },
-          { text: 'Quitter', style: 'destructive', onPress: () => { resetForm(); navigation.navigate('Dashboard'); } },
-        ]
-      );
-    } else navigation.navigate('Dashboard');
+      setShowBackAlert(true);  // Affiche le modal stylé
+    } else {
+      navigation.navigate('Dashboard');
+    }
+  };
+
+  const handleConfirmBack = () => {
+    setShowBackAlert(false);
+    resetForm();
+    navigation.navigate('Dashboard');
+  };
+
+  const handleCancelBack = () => {
+    setShowBackAlert(false);
   };
 
   return (
@@ -102,6 +110,11 @@ export default function FormulaireNote({ navigation, route }) {
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+      <BackAlertModal
+        visible={showBackAlert}
+        onCancel={handleCancelBack}
+        onConfirm={handleConfirmBack}
+      />
     </View>
   );
 }
